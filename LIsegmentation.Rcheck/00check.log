@@ -1,0 +1,182 @@
+* using log directory ‘/Users/kam540/Documents/gitHub/LI-Segmentation-Rpackage/LIsegmentation.Rcheck’
+* using R version 4.0.2 (2020-06-22)
+* using platform: x86_64-apple-darwin17.0 (64-bit)
+* using session charset: UTF-8
+* using options ‘--no-manual --as-cran’
+* checking for file ‘LIsegmentation/DESCRIPTION’ ... OK
+* this is package ‘LIsegmentation’ version ‘0.0.0.9000’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking serialization versions ... OK
+* checking whether package ‘LIsegmentation’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... WARNING
+Non-standard license specification:
+  `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+  license
+Standardizable: FALSE
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+adhocBound: no visible global function definition for ‘%dopar%’
+adhocBound: no visible global function definition for ‘foreach’
+adhocBound: no visible binding for global variable ‘i’
+gaBound: no visible global function definition for ‘registerDoMC’
+getBound: no visible global function definition for ‘%dopar%’
+getBound: no visible global function definition for ‘foreach’
+getBound: no visible binding for global variable ‘i’
+liraPost: no visible global function definition for ‘read.table’
+liraPost: no visible global function definition for ‘write.table’
+liraPost: no visible binding for global variable ‘base’
+liraPost: no visible global function definition for ‘ggplot’
+liraPost: no visible global function definition for ‘aes’
+liraPost: no visible binding for global variable ‘logPost’
+liraPost: no visible binding for global variable ‘iteration’
+liraPost: no visible global function definition for ‘geom_line’
+liraPost: no visible binding for global variable ‘expectedMSCounts’
+liraPost: no visible binding for global variable ‘bkgScale’
+liraPost: no visible global function definition for ‘grid.arrange’
+multiBound: no visible global function definition for ‘melt’
+multiBound: no visible binding for global variable ‘coord.range.x’
+multiBound: no visible binding for global variable ‘coord.range.y’
+multiBound: no visible global function definition for ‘geom_tile’
+multiBound: no visible global function definition for ‘aes’
+multiBound: no visible binding for global variable ‘X’
+multiBound: no visible binding for global variable ‘Y’
+multiBound: no visible binding for global variable ‘w’
+multiBound: no visible binding for global variable ‘h’
+multiBound: no visible binding for global variable ‘bound_color’
+mutateObs: no visible global function definition for ‘runif’
+plotGrid: no visible global function definition for ‘brewer.pal’
+plotGrid: no visible global function definition for ‘melt’
+plotGrid: no visible global function definition for ‘ggplot’
+plotGrid: no visible global function definition for ‘aes’
+plotGrid: no visible binding for global variable ‘RA’
+plotGrid: no visible binding for global variable ‘DEC’
+plotGrid: no visible binding for global variable ‘counts’
+plotGrid: no visible global function definition for ‘facet_grid’
+plotGrid: no visible global function definition for ‘vars’
+plotGrid: no visible binding for global variable ‘row_id’
+plotGrid: no visible binding for global variable ‘col_id’
+plotGrid: no visible global function definition for ‘labeller’
+plotGrid: no visible global function definition for ‘geom_raster’
+plotGrid: no visible global function definition for
+  ‘scale_fill_gradientn’
+plotGrid: no visible global function definition for ‘theme’
+plotGrid: no visible global function definition for ‘element_rect’
+plotGrid: no visible global function definition for ‘element_blank’
+plotGrid: no visible global function definition for ‘margin’
+plotGrid: no visible global function definition for ‘ggtitle’
+plotGrid: no visible global function definition for ‘element_text’
+plotGrid: no visible global function definition for ‘rel’
+plotGrid: no visible global function definition for ‘guides’
+plotGrid: no visible global function definition for ‘guide_colourbar’
+plotGrid: no visible global function definition for ‘labs’
+plotGrid: no visible global function definition for ‘geom_contour’
+plotGrid: no visible global function definition for ‘aes_string’
+plotGrid: no visible global function definition for ‘ggsave’
+plotSource: no visible global function definition for ‘brewer.pal’
+plotSource: no visible global function definition for ‘melt’
+plotSource: no visible global function definition for ‘ggplot’
+plotSource: no visible global function definition for ‘aes’
+plotSource: no visible binding for global variable ‘X’
+plotSource: no visible binding for global variable ‘Y’
+plotSource: no visible binding for global variable ‘counts’
+plotSource: no visible global function definition for ‘geom_raster’
+plotSource: no visible global function definition for
+  ‘scale_fill_gradientn’
+plotSource: no visible global function definition for ‘theme’
+plotSource: no visible global function definition for ‘element_blank’
+plotSource: no visible global function definition for ‘element_text’
+plotSource: no visible global function definition for ‘ggtitle’
+plotSource: no visible global function definition for ‘element_rect’
+plotSource: no visible global function definition for ‘guides’
+plotSource: no visible global function definition for ‘guide_colourbar’
+plotSource: no visible global function definition for ‘labs’
+plotSource: no visible global function definition for ‘element_line’
+plotSource: no visible global function definition for ‘unit’
+plotSource: no visible global function definition for ‘xlab’
+plotSource: no visible global function definition for ‘ylab’
+plotSource: no visible global function definition for ‘scale_x_reverse’
+plotSource: no visible global function definition for ‘geom_contour’
+plotSource: no visible binding for global variable ‘Interval’
+plotSource: no visible global function definition for ‘aes_string’
+plotSource: no visible global function definition for ‘ggsave’
+ratioCheck: no visible global function definition for ‘brob’
+reproducePop: no visible global function definition for ‘%dopar%’
+reproducePop: no visible global function definition for ‘foreach’
+reproducePop: no visible binding for global variable ‘i’
+runGibbs: no visible global function definition for ‘registerDoMC’
+runGibbs: no visible global function definition for ‘format_liraOut’
+runGibbs: no visible global function definition for ‘timestamp’
+runGibbs: no visible global function definition for ‘isingGibbs’
+runGibbs: no visible binding for global variable ‘beta.jump’
+runGibbs: no visible global function definition for ‘%dopar%’
+runGibbs: no visible global function definition for ‘foreach’
+runGibbs: no visible binding for global variable ‘i’
+selectMax: no visible binding for global variable ‘lambda’
+selectMax: no visible binding for global variable ‘param’
+selectPop: no visible global function definition for ‘%dopar%’
+selectPop: no visible global function definition for ‘foreach’
+Undefined global functions or variables:
+  %dopar% DEC Interval RA X Y aes aes_string base beta.jump bkgScale
+  bound_color brewer.pal brob col_id coord.range.x coord.range.y counts
+  element_blank element_line element_rect element_text expectedMSCounts
+  facet_grid foreach format_liraOut geom_contour geom_line geom_raster
+  geom_tile ggplot ggsave ggtitle grid.arrange guide_colourbar guides h
+  i isingGibbs iteration labeller labs lambda logPost margin melt param
+  read.table registerDoMC rel row_id runif scale_fill_gradientn
+  scale_x_reverse theme timestamp unit vars w write.table xlab ylab
+Consider adding
+  importFrom("stats", "runif")
+  importFrom("utils", "read.table", "timestamp", "write.table")
+to your NAMESPACE file.
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in documentation object 'runGibbs'
+  ‘lira’ ‘G’ ‘init_iter’ ‘burn_iter’ ‘bet.jump’ ‘beta.a’ ‘beta.b’
+  ‘beta.start’ ‘beta.niter’ ‘tau.mu’ ‘sigma.df’ ‘omega.sq’ ‘init.seed’
+  ‘ncores’
+Documented arguments not in \usage in documentation object 'runGibbs':
+  ‘lambda’
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking examples ... NONE
+* checking for non-standard things in the check directory ... OK
+* checking for detritus in the temp directory ... OK
+* DONE
+Status: 2 WARNINGs, 1 NOTE

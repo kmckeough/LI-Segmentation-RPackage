@@ -1,0 +1,22 @@
+adhocBound              Ad Hoc Boundary Algorithm
+cAvgIsing               Cumulative Average Ising
+calcIsing               Calculate Ising Sum Component
+calcN                   Calculate Neighborhood Values
+countNotAdjacent        Count Matching Adjacent Values
+gaBound                 Genetic Algorithm
+getBound                Final Minimal Boundary Estimate
+initPop                 Genetic Algorithm - Initial Population
+liraPost                LIRA Post-Process
+modifyColor             Modify Custom Color Scale
+multiBound              Multi Bound
+mutateObs               Genetic Algorithm - Mutation
+plotGrid                Plot A Grid of Images
+plotSource              Plot Source
+postRatio               Calculate Log Posterior
+ratioCalc               Calculate Posterior Ratio
+ratioCheck              Calculate Final Ration
+reproducePop            Genetic Algorithm - Selection
+runGibbs                Run Ising Gibbs Sampler
+selectMax               Genetic Algorithm - Select MAx
+selectPop               Genetic Algorithm - Selection
+stairBase               Plot A Grid of Images
