@@ -15,14 +15,21 @@
 * checking for portable file names ... OK
 * checking for sufficient/correct file permissions ... OK
 * checking serialization versions ... OK
-* checking whether package ‘LIsegmentation’ can be installed ... OK
+* checking whether package ‘LIsegmentation’ can be installed ... WARNING
+Found the following significant warnings:
+  Note: possible error in 'runGibbs(lira_array[i, ': unused arguments (tau1.start = tau1, tau0.start = tau0, sigma1_sq.start = sigma1_sq, sigma0_sq.start = sigma0_sq) 
+  Note: possible error in 'tempMH(beta = beta[ii - ': unused argument (B = beta_niter) 
+  Note: possible error in 'paramDraw(z = Z[ii - ': unused arguments (z = Z[ii - 1, ], mu0 = tau_mu) 
+See ‘/Users/kam540/Documents/gitHub/LI-Segmentation-Rpackage/LIsegmentation.Rcheck/00install.out’ for details.
+Information on the location(s) of code generating the ‘Note’s can be
+obtained by re-running with environment variable R_KEEP_PKG_SOURCE set
+to ‘yes’.
 * checking installed package size ... OK
 * checking package directory ... OK
 * checking for future file timestamps ... OK
 * checking DESCRIPTION meta-information ... WARNING
 Non-standard license specification:
-  `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-  license
+  use_gpl_license()
 Standardizable: FALSE
 * checking top-level files ... OK
 * checking for left-over files ... OK
@@ -41,13 +48,37 @@ Standardizable: FALSE
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
 * checking R code for possible problems ... NOTE
+runGibbs: warning in paramDraw(z = Z[ii - 1, ], lambda = lambda_draw,
+  tau0 = tau0[ii - 1], tau1 = tau1[ii - 1], sigma0_sq = sigma0_sq[ii -
+  1], sigma1_sq = sigma1_sq[ii - 1], mu0 = tau_mu, sigma_df = sigma_df,
+  omega_sq = omega_sq): partial argument match of 'lambda' to
+  'lambda_draw'
 adhocBound: no visible global function definition for ‘%dopar%’
 adhocBound: no visible global function definition for ‘foreach’
 adhocBound: no visible binding for global variable ‘i’
+clusterGraph: no visible global function definition for ‘components’
+createGraph: no visible global function definition for
+  ‘graph_from_data_frame’
+estPartition: no visible global function definition for ‘add.bigz’
 gaBound: no visible global function definition for ‘registerDoMC’
 getBound: no visible global function definition for ‘%dopar%’
 getBound: no visible global function definition for ‘foreach’
 getBound: no visible binding for global variable ‘i’
+isingGibbs: no visible global function definition for ‘detectCores’
+isingGibbs: no visible global function definition for ‘registerDoMC’
+isingGibbs: no visible global function definition for ‘timestamp’
+isingGibbs: no visible binding for global variable ‘lira_array’
+isingGibbs: no visible global function definition for ‘%dopar%’
+isingGibbs: no visible global function definition for ‘foreach’
+isingGibbs: possible error in runGibbs(lira_array[i, ], Z = Z, iter =
+  burn_iter, tau1.start = tau1, tau0.start = tau0, sigma1_sq.start =
+  sigma1_sq, sigma0_sq.start = sigma0_sq, beta_jump = beta_jump, beta_a
+  = beta_a, beta_b = beta_b, beta_start = beta, beta_niter =
+  beta_niter, tau_mu = tau_mu, sigma_df = sigma_df, omega_sq =
+  omega_sq, G = G, init_seed = init_seed): unused arguments (tau1.start
+  = tau1, tau0.start = tau0, sigma1_sq.start = sigma1_sq,
+  sigma0_sq.start = sigma0_sq)
+isingGibbs: no visible binding for global variable ‘i’
 liraPost: no visible global function definition for ‘read.table’
 liraPost: no visible global function definition for ‘write.table’
 liraPost: no visible binding for global variable ‘base’
@@ -59,6 +90,8 @@ liraPost: no visible global function definition for ‘geom_line’
 liraPost: no visible binding for global variable ‘expectedMSCounts’
 liraPost: no visible binding for global variable ‘bkgScale’
 liraPost: no visible global function definition for ‘grid.arrange’
+loadPartition : <anonymous>: no visible global function definition for
+  ‘as.bigz’
 multiBound: no visible global function definition for ‘melt’
 multiBound: no visible binding for global variable ‘coord.range.x’
 multiBound: no visible binding for global variable ‘coord.range.y’
@@ -70,6 +103,9 @@ multiBound: no visible binding for global variable ‘w’
 multiBound: no visible binding for global variable ‘h’
 multiBound: no visible binding for global variable ‘bound_color’
 mutateObs: no visible global function definition for ‘runif’
+paramDraw: no visible binding for global variable ‘z’
+paramDraw: no visible global function definition for ‘rchisq’
+paramDraw: no visible global function definition for ‘rnorm’
 plotGrid: no visible global function definition for ‘brewer.pal’
 plotGrid: no visible global function definition for ‘melt’
 plotGrid: no visible global function definition for ‘ggplot’
@@ -129,29 +165,48 @@ ratioCheck: no visible global function definition for ‘brob’
 reproducePop: no visible global function definition for ‘%dopar%’
 reproducePop: no visible global function definition for ‘foreach’
 reproducePop: no visible binding for global variable ‘i’
-runGibbs: no visible global function definition for ‘registerDoMC’
-runGibbs: no visible global function definition for ‘format_liraOut’
-runGibbs: no visible global function definition for ‘timestamp’
-runGibbs: no visible global function definition for ‘isingGibbs’
-runGibbs: no visible binding for global variable ‘beta.jump’
-runGibbs: no visible global function definition for ‘%dopar%’
-runGibbs: no visible global function definition for ‘foreach’
-runGibbs: no visible binding for global variable ‘i’
+runGibbs: no visible binding for global variable ‘beta.start’
+runGibbs: no visible binding for global variable ‘sigma.df’
+runGibbs: no visible binding for global variable ‘omega.sq’
+runGibbs: no visible global function definition for ‘rchisq’
+runGibbs: no visible global function definition for ‘rnorm’
+runGibbs: possible error in tempMH(beta = beta[ii - 1], z = array(Z[ii
+  - 1, ], dim = c(n, n)), G = G, jump = beta_jump, B = beta_niter,
+  beta_a = beta_a, beta_b = beta_b): unused argument (B = beta_niter)
+runGibbs: possible error in paramDraw(z = Z[ii - 1, ], lambda =
+  lambda_draw, tau0 = tau0[ii - 1], tau1 = tau1[ii - 1], sigma0_sq =
+  sigma0_sq[ii - 1], sigma1_sq = sigma1_sq[ii - 1], mu0 = tau_mu,
+  sigma_df = sigma_df, omega_sq = omega_sq): unused arguments (z = Z[ii
+  - 1, ], mu0 = tau_mu)
+runGibbs: no visible global function definition for ‘swendson.wang’
+runSW: no visible global function definition for ‘llply’
+sampleCluster: no visible global function definition for
+  ‘h_z.param.log’
+sampleCluster: no visible binding for global variable ‘z.cluster’
+sampleNode: no visible global function definition for ‘h_z.param.log’
+sampleNode: no visible binding for global variable ‘sigma0.sq’
+sampleNode: no visible binding for global variable ‘sigma1.sq’
 selectMax: no visible binding for global variable ‘lambda’
 selectMax: no visible binding for global variable ‘param’
 selectPop: no visible global function definition for ‘%dopar%’
 selectPop: no visible global function definition for ‘foreach’
+tempMH: no visible global function definition for ‘rgamma’
+tempMH: no visible global function definition for ‘dgamma’
+tempMH: no visible global function definition for ‘runif’
 Undefined global functions or variables:
-  %dopar% DEC Interval RA X Y aes aes_string base beta.jump bkgScale
-  bound_color brewer.pal brob col_id coord.range.x coord.range.y counts
-  element_blank element_line element_rect element_text expectedMSCounts
-  facet_grid foreach format_liraOut geom_contour geom_line geom_raster
-  geom_tile ggplot ggsave ggtitle grid.arrange guide_colourbar guides h
-  i isingGibbs iteration labeller labs lambda logPost margin melt param
-  read.table registerDoMC rel row_id runif scale_fill_gradientn
-  scale_x_reverse theme timestamp unit vars w write.table xlab ylab
+  %dopar% DEC Interval RA X Y add.bigz aes aes_string as.bigz base
+  beta.start bkgScale bound_color brewer.pal brob col_id components
+  coord.range.x coord.range.y counts detectCores dgamma element_blank
+  element_line element_rect element_text expectedMSCounts facet_grid
+  foreach geom_contour geom_line geom_raster geom_tile ggplot ggsave
+  ggtitle graph_from_data_frame grid.arrange guide_colourbar guides h
+  h_z.param.log i iteration labeller labs lambda lira_array llply
+  logPost margin melt omega.sq param rchisq read.table registerDoMC rel
+  rgamma rnorm row_id runif scale_fill_gradientn scale_x_reverse
+  sigma.df sigma0.sq sigma1.sq swendson.wang theme timestamp unit vars
+  w write.table xlab ylab z z.cluster
 Consider adding
-  importFrom("stats", "runif")
+  importFrom("stats", "dgamma", "rchisq", "rgamma", "rnorm", "runif")
   importFrom("utils", "read.table", "timestamp", "write.table")
 to your NAMESPACE file.
 * checking Rd files ... OK
@@ -160,19 +215,7 @@ to your NAMESPACE file.
 * checking Rd cross-references ... OK
 * checking for missing documentation entries ... OK
 * checking for code/documentation mismatches ... OK
-* checking Rd \usage sections ... WARNING
-Undocumented arguments in documentation object 'runGibbs'
-  ‘lira’ ‘G’ ‘init_iter’ ‘burn_iter’ ‘bet.jump’ ‘beta.a’ ‘beta.b’
-  ‘beta.start’ ‘beta.niter’ ‘tau.mu’ ‘sigma.df’ ‘omega.sq’ ‘init.seed’
-  ‘ncores’
-Documented arguments not in \usage in documentation object 'runGibbs':
-  ‘lambda’
-
-Functions with \usage entries need to have the appropriate \alias
-entries, and all their arguments documented.
-The \usage entries must correspond to syntactically valid R code.
-See chapter ‘Writing R documentation files’ in the ‘Writing R
-Extensions’ manual.
+* checking Rd \usage sections ... OK
 * checking Rd contents ... OK
 * checking for unstated dependencies in examples ... OK
 * checking examples ... NONE

@@ -2,21 +2,34 @@ adhocBound              Ad Hoc Boundary Algorithm
 cAvgIsing               Cumulative Average Ising
 calcIsing               Calculate Ising Sum Component
 calcN                   Calculate Neighborhood Values
+clusterGraph            Cluster Spin States
 countNotAdjacent        Count Matching Adjacent Values
+createGraph             Create Graph of Spin States
+estPartition            Estimate Partition Function
 gaBound                 Genetic Algorithm
 getBound                Final Minimal Boundary Estimate
+hzParam                 Swendsen Wang for Spins
 initPop                 Genetic Algorithm - Initial Population
+isingGibbs              Run Ising Gibbs Sampler
 liraPost                LIRA Post-Process
+loadPartition           Load Partition Function
 modifyColor             Modify Custom Color Scale
 multiBound              Multi Bound
 mutateObs               Genetic Algorithm - Mutation
+paramDraw               Conjugate Prior Draw for sqrt Normal
 plotGrid                Plot A Grid of Images
 plotSource              Plot Source
 postRatio               Calculate Log Posterior
+prodAdjacent            Product of Adjacent Pixels
 ratioCalc               Calculate Posterior Ratio
 ratioCheck              Calculate Final Ration
+rectBase                Rectangle Base for Simulation
 reproducePop            Genetic Algorithm - Selection
 runGibbs                Run Ising Gibbs Sampler
+runSW                   Run Swendsen Wang Iterations
+sampleCluster           Sample Cluster
+sampleNode              Sample Nodes
 selectMax               Genetic Algorithm - Select MAx
 selectPop               Genetic Algorithm - Selection
 stairBase               Plot A Grid of Images
+tempMH                  Draw Temperature Parameter (beta)

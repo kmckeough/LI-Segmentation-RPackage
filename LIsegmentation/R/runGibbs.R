@@ -1,70 +1,132 @@
 #' Run Ising Gibbs Sampler
 #'
-#' Run the Ising Gibbs Sampler to get posterior distribution of pixel assignments
+#' Ising Gibbs Sampler
 #'
-#' @param lambda posterior multiscale counts from running LIRA, one per row
+#' @param lambda_draw posterior multiscale counts from running LIRA, single draw
+#' @param G energy information from Beale exact calculation
+#' @param Z set initial draw for spin state, random assingments if NA
+#' @param iter number of iterations
+#' @param beta_jump jump for MH
+#' @param beta_a prior parameter
+#' @param beta_b prior parameter
+#' @param beta_start initial value for beta parameter (keep close to 0)
+#' @param beta_niter number of iterations for beta parameter draw
+#' @param tau1_start initial value for tau1
+#' @param tau0_start initial value for tau0
+#' @param sigma1_sq_start initial value for sigma1
+#' @param sigma0_sq_start initial value for sigma0
+#' @param tau_mu prior parameter
+#' @param sigma_df prior parameter
+#' @param omega_sq prior parameter
+#' @param init_seed set seed to replicate results, NA means no seed set
 #' @return the log posterior componants for the ratio calculation
 #' @export
 #'
 #'
 
+runGibbs<-function(lambda_draw,
+                   G,
+                    Z=NA,
+                    iter=1000,
+                    beta_jump=0.01,
+                    beta_a=100,
+                    beta_b=1,
+                    beta_start=0.1,
+                    beta_niter = 20,
+                    tau1_start=NA,
+                    tau0_start=NA,
+                    sigma1_sq_start=NA,
+                    sigma0_sq_start=NA,
+                    tau_mu=5,
+                    sigma_df=10,
+                    omega_sq=1,
+                    init_seed=NA){
 
-runGibbs<-function(lira,
-                     G,
-                     init_iter = 500,
-                     burn_iter = 50,
-                     bet.jump = 0.01,
-                     beta.a = 100,
-                     beta.b = 1,
-                     beta.start = 0.1,
-                     beta.niter = 50,
-                     tau.mu = 5,
-                     sigma.df = 10,
-                     omega.sq = 1,
-                     init.seed = NA,
-                     ncores = NA
-){
-  # Detect cores if not given
-  if(is.na(ncores)){
-    ncores<-1#detectCores(all.tests = FALSE, logical = TRUE)
+  n.sq<-length(lambda_draw)
+  n<-sqrt(n.sq)
+
+  if(any(is.na(Z))){
+    Z<-array(sample(c(-1,1),iter*n.sq,replace=TRUE),dim=c(iter,n.sq))
+  }else{
+    Z<-array(Z,dim=c(iter,n.sq))
   }
-  registerDoMC(ncores)
 
-  # If file given instead of array, read in file
-  lira_array<-format_liraOut(lira)
 
-  # Initialize
-  print('Initialize MCMC Runs:')
-  timestamp()
-  init<-isingGibbs(lira_array[1,],Z=NA,iter=init_iter,
-                  beta.jump=beta.jump,beta.a=beta.a,beta.b=beta.b,beta.start=beta.start,beta.niter = beta.niter,
-                  tau.mu=tau.mu,sigma.df=sigma.df,omega.sq=omega.sq,G=G,
-                  init.seed=init.seed)
+  #Initialize parameter vectors
+  if(!is.na(init_seed)){set.seed(init_seed)}
 
-  # Run for each lira output
-  print('Running on LIRA iter:')
-  timestamp()
-  tau1<-init$tau1[init_iter]
-  tau0<-init$tau0[init_iter]
-  sigma0.sq<-init$sigma0.sq[init_iter]
-  sigma1.sq<-init$sigma1.sq[init_iter]
-  beta<-init$beta[init_iter]
-  Z<-init$Z[init_iter,]
-  ising_array<-foreach(i=1:nrow(lira_array),.combine=rbind) %dopar% {
-    burn<-isingGibbs(lira_array[i,],Z=Z,iter=burn_iter,
-                    tau1.start=tau1, tau0.start=tau0,
-                    sigma1.sq.start=sigma1.sq, sigma0.sq.start=sigma0.sq,
-                    beta.jump=beta.jump,beta.a=beta.a,beta.b=beta.b,beta.start=beta,beta.niter = beta.niter,
-                    tau.mu=tau.mu,sigma.df=sigma.df,omega.sq=omega.sq,G=G,
-                    init.seed=init.seed)
-
-    c(burn$tau1[burn_iter],burn$tau0[burn_iter],
-      burn$sigma0.sq[burn_iter],burn$sigma1.sq[burn_iter],
-      burn$beta[burn_iter],burn$Z[burn_iter,])
+  beta<-rep(beta.start,iter)
+  if(is.na(sigma1_sq_start)){
+    sigma1_sq<-rep(sigma_df*omega_sq/rchisq(1,sigma_df),iter)
+  }else{
+    sigma1_sq<-rep(sigma1_sq_start,iter)
   }
-  param<-ising_array[,1:5]
-  colnames(param)<-c('tau1','tau0','sigma0.sq','sigma1.sq','beta')
-  z_array<-ising_array[,-c(1:5)]
-  return(list(param = param,ising_array = z_array))
+  if(is.na(sigma0_sq_start)){
+    sigma0_sq<-rep(sigma_df*omega_sq/rchisq(1,sigma_df),iter)
+  }else{
+    sigma0_sq<-rep(sigma0_sq_start,iter)
+  }
+  if(is.na(tau1_start)){
+    tau1<-rep(rnorm(1,tau_mu,sqrt(sigma1_sq[1])),iter)
+  }else{
+    tau1<-rep(tau1_start,iter)
+  }
+  if(is.na(tau0_start)){
+    tau0<-rep(rnorm(1,tau_mu,sqrt(sigma0_sq[1])),iter)
+  }else{
+    tau0<-rep(tau0_start,iter)
+  }
+
+  #timestamp()
+  for(ii in 2:iter){
+    #if(ii%%100 == 0 ){
+    #timestamp()
+    #print(ii)
+    #}
+
+    # Draw beta for Ising:
+    beta_draw<-tempMH(beta = beta[ii-1],
+                      z = array(Z[ii-1,],dim = c(n,n)),
+                      G = G,
+                      jump = beta_jump,
+                      iter = beta_niter,
+                      beta_a = beta_a,
+                      beta_b = beta_b)
+
+    beta[ii]<-beta_draw[beta_niter]
+
+    # Draw for mean and sd parameters
+    param <- paramDraw(z = Z[ii-1,],
+                       lambda = lambda_draw,
+                        tau0 = tau0[ii-1],
+                       tau1 = tau1[ii-1],
+                        sigma0_sq = sigma0_sq[ii-1],
+                       sigma1_sq = sigma1_sq[ii-1],
+                        mu0 = tau_mu,
+                       sigma_df = sigma_df,
+                       omega_sq = omega_sq)
+
+    tau0[ii] <- param$tau0
+    tau1[ii] <- param$tau1
+    sigma0_sq[ii] <- param$sigma0_sq
+    sigma1_sq[ii] <- param$sigma1_sq
+
+    # Draw from SW
+    z.img<-runSW(lambda = lambda_draw,
+                         z_0 = array(Z[ii-1,],dim=c(n,n)),
+                         tau0 = tau0[ii],
+                         tau1 = tau1[ii],
+                         sigma0_sq = sigma0_sq[ii],
+                         sigma1_sq = sigma1_sq[ii],
+                         beta = beta[ii])
+    Z[ii,]<-c(z.img)
+  }
+
+  sims.list<-list(Z=Z,
+                  tau0=tau0,tau1=tau1,
+                  sigma0_sq=sigma0_sq,
+                  sigma1_sq=sigma1_sq,
+                  beta=beta)
+  return(sims.list)
 
 }

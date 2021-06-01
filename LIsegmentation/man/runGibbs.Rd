@@ -5,28 +5,63 @@
 \title{Run Ising Gibbs Sampler}
 \usage{
 runGibbs(
-  lira,
+  lambda_draw,
   G,
-  init_iter = 500,
-  burn_iter = 50,
-  bet.jump = 0.01,
-  beta.a = 100,
-  beta.b = 1,
-  beta.start = 0.1,
-  beta.niter = 50,
-  tau.mu = 5,
-  sigma.df = 10,
-  omega.sq = 1,
-  init.seed = NA,
-  ncores = NA
+  Z = NA,
+  iter = 1000,
+  beta_jump = 0.01,
+  beta_a = 100,
+  beta_b = 1,
+  beta_start = 0.1,
+  beta_niter = 20,
+  tau1_start = NA,
+  tau0_start = NA,
+  sigma1_sq_start = NA,
+  sigma0_sq_start = NA,
+  tau_mu = 5,
+  sigma_df = 10,
+  omega_sq = 1,
+  init_seed = NA
 )
 }
 \arguments{
-\item{lambda}{posterior multiscale counts from running LIRA, one per row}
+\item{lambda_draw}{posterior multiscale counts from running LIRA, single draw}
+
+\item{G}{energy information from Beale exact calculation}
+
+\item{Z}{set initial draw for spin state, random assingments if NA}
+
+\item{iter}{number of iterations}
+
+\item{beta_jump}{jump for MH}
+
+\item{beta_a}{prior parameter}
+
+\item{beta_b}{prior parameter}
+
+\item{beta_start}{initial value for beta parameter (keep close to 0)}
+
+\item{beta_niter}{number of iterations for beta parameter draw}
+
+\item{tau1_start}{initial value for tau1}
+
+\item{tau0_start}{initial value for tau0}
+
+\item{sigma1_sq_start}{initial value for sigma1}
+
+\item{sigma0_sq_start}{initial value for sigma0}
+
+\item{tau_mu}{prior parameter}
+
+\item{sigma_df}{prior parameter}
+
+\item{omega_sq}{prior parameter}
+
+\item{init_seed}{set seed to replicate results, NA means no seed set}
 }
 \value{
 the log posterior componants for the ratio calculation
 }
 \description{
-Run the Ising Gibbs Sampler to get posterior distribution of pixel assignments
+Ising Gibbs Sampler
 }
