@@ -16,7 +16,7 @@ RoxygenNote: 7.1.1
 Imports: ggplot2, reshape2, RColorBrewer, foreach, parallel, doMC,
         dplyr, Brobdingnag, FITSio, igraph, coda, gmp, MASS
 NeedsCompilation: no
-Packaged: 2021-06-01 19:03:33 UTC; kam540
+Packaged: 2021-06-01 19:39:48 UTC; kam540
 Author: Katy McKeough [aut, cre] (YOUR-ORCID-ID)
 Maintainer: Katy McKeough <katy.mckeough@gmail.com>
-Built: R 4.0.2; ; 2021-06-01 19:03:38 UTC; unix
+Built: R 4.0.2; ; 2021-06-01 19:39:54 UTC; unix

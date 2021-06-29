@@ -32,9 +32,9 @@ liraPost<-function(out,
 
   iter_LIRA<-iter_LIRA[-nrow(iter_LIRA),]
 
-  if(save!=FALSE){
+  if(save_file!=FALSE){
     # remove last row (for some reason LIRA not printing correctly)
-    write.table(iter_LIRA,paste(base[ii],'_lira_iters.txt',sep=''))
+    write.table(iter_LIRA,paste(save_file,'_lira_iters.txt',sep=''))
   }
 
   param<-as.data.frame(read.table(param,header=TRUE))[(burn+1):(nrow(iter_LIRA)-1),]
@@ -49,7 +49,7 @@ liraPost<-function(out,
     geom_line()
 
   if(plot){
-    grid.arrange(g1, g2,g3, nrow = 2)
+    grid.arrange(g1, g2,g3, nrow = 1)
   }
 
   return(iter_LIRA)

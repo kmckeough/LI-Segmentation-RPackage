@@ -17,7 +17,7 @@
 #'
 
 
-paramDraw<-function(Z,
+paramDraw<-function(z,
                      lambda_draw,
                      tau0,
                      tau1,
@@ -38,7 +38,12 @@ paramDraw<-function(Z,
     # Calculate relevant values
     n.z<-sum(z==zz)
     lambda.n.bar<-mean(lambda_draw[z==zz])
-    s.n<-1/(n.z-1)*sum((lambda_draw[z==zz]-lambda.n.bar)^2)
+    if(sum((lambda_draw[z==zz]-lambda.n.bar)^2)==0){
+      s.n<-0
+    }else{
+      s.n<-1/(n.z-1)*sum((lambda_draw[z==zz]-lambda.n.bar)^2)
+    }
+
     mu.n<-1/(n.z+1)*tau_mu + n.z/(1+n.z)*lambda.n.bar
     v.n<-sigma_df+n.z
     v.omega.n<-sigma_df*omega_sq + (n.z-1)*s.n+n.z/(1+n.z)*(lambda.n.bar-tau_mu)^2

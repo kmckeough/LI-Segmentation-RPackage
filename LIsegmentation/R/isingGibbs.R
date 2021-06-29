@@ -51,7 +51,9 @@ isingGibbs<-function(lambda,
   # Initialize
   print('Initialize MCMC Runs:')
   timestamp()
-  init<-runGibbs(lambda[1,],Z=NA,iter=init_iter,
+  init<-runGibbs(lambda[1,],
+                 Z=NA,
+                 iter=init_iter,
                    beta_jump=beta_jump,
                    beta_a=beta_a,
                    beta_b=beta_b,
@@ -74,11 +76,22 @@ isingGibbs<-function(lambda,
   Z<-init$Z[init_iter,]
   ising_array<-foreach(i=1:nrow(lambda),.combine=rbind) %dopar% {
 
-    burn<-runGibbs(lambda[i,],Z=Z,iter=burn_iter,
-                     tau1.start=tau1, tau0.start=tau0,
-                     sigma1_sq.start=sigma1_sq, sigma0_sq.start=sigma0_sq,
-                     beta_jump=beta_jump,beta_a=beta_a,beta_b=beta_b,beta_start=beta,beta_niter = beta_niter,
-                     tau_mu=tau_mu,sigma_df=sigma_df,omega_sq=omega_sq,G=G,
+    burn<-runGibbs(lambda[i,],
+                   Z=Z,
+                   iter=burn_iter,
+                     tau1_start=tau1,
+                   tau0_start=tau0,
+                     sigma1_sq_start=sigma1_sq,
+                   sigma0_sq_start=sigma0_sq,
+                     beta_jump=beta_jump,
+                   beta_a=beta_a,
+                   beta_b=beta_b,
+                   beta_start=beta,
+                   beta_niter = beta_niter,
+                     tau_mu=tau_mu,
+                   sigma_df=sigma_df,
+                   omega_sq=omega_sq,
+                   G=G,
                      init_seed=init_seed)
 
     c(burn$tau1[burn_iter],burn$tau0[burn_iter],

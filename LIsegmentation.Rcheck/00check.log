@@ -17,8 +17,7 @@
 * checking serialization versions ... OK
 * checking whether package ‘LIsegmentation’ can be installed ... WARNING
 Found the following significant warnings:
-  Note: possible error in 'runGibbs(lira_array[i, ': unused arguments (tau1.start = tau1, tau0.start = tau0, sigma1_sq.start = sigma1_sq, sigma0_sq.start = sigma0_sq) 
-  Note: possible error in 'tempMH(beta = beta[ii - ': unused argument (B = beta_niter) 
+  Note: possible error in 'runGibbs(lambda[i, ], ': unused arguments (tau1.start = tau1, tau0.start = tau0, sigma1_sq.start = sigma1_sq, sigma0_sq.start = sigma0_sq) 
   Note: possible error in 'paramDraw(z = Z[ii - ': unused arguments (z = Z[ii - 1, ], mu0 = tau_mu) 
 See ‘/Users/kam540/Documents/gitHub/LI-Segmentation-Rpackage/LIsegmentation.Rcheck/00install.out’ for details.
 Information on the location(s) of code generating the ‘Note’s can be
@@ -53,6 +52,10 @@ runGibbs: warning in paramDraw(z = Z[ii - 1, ], lambda = lambda_draw,
   1], sigma1_sq = sigma1_sq[ii - 1], mu0 = tau_mu, sigma_df = sigma_df,
   omega_sq = omega_sq): partial argument match of 'lambda' to
   'lambda_draw'
+runGibbs: warning in runSW(lambda = lambda_draw, z_0 = array(Z[ii - 1,
+  ], dim = c(n, n)), tau0 = tau0[ii], tau1 = tau1[ii], sigma0_sq =
+  sigma0_sq[ii], sigma1_sq = sigma1_sq[ii], beta = beta[ii]): partial
+  argument match of 'lambda' to 'lambda_draw'
 adhocBound: no visible global function definition for ‘%dopar%’
 adhocBound: no visible global function definition for ‘foreach’
 adhocBound: no visible binding for global variable ‘i’
@@ -67,10 +70,9 @@ getBound: no visible binding for global variable ‘i’
 isingGibbs: no visible global function definition for ‘detectCores’
 isingGibbs: no visible global function definition for ‘registerDoMC’
 isingGibbs: no visible global function definition for ‘timestamp’
-isingGibbs: no visible binding for global variable ‘lira_array’
 isingGibbs: no visible global function definition for ‘%dopar%’
 isingGibbs: no visible global function definition for ‘foreach’
-isingGibbs: possible error in runGibbs(lira_array[i, ], Z = Z, iter =
+isingGibbs: possible error in runGibbs(lambda[i, ], Z = Z, iter =
   burn_iter, tau1.start = tau1, tau0.start = tau0, sigma1_sq.start =
   sigma1_sq, sigma0_sq.start = sigma0_sq, beta_jump = beta_jump, beta_a
   = beta_a, beta_b = beta_b, beta_start = beta, beta_niter =
@@ -166,19 +168,13 @@ reproducePop: no visible global function definition for ‘%dopar%’
 reproducePop: no visible global function definition for ‘foreach’
 reproducePop: no visible binding for global variable ‘i’
 runGibbs: no visible binding for global variable ‘beta.start’
-runGibbs: no visible binding for global variable ‘sigma.df’
-runGibbs: no visible binding for global variable ‘omega.sq’
 runGibbs: no visible global function definition for ‘rchisq’
 runGibbs: no visible global function definition for ‘rnorm’
-runGibbs: possible error in tempMH(beta = beta[ii - 1], z = array(Z[ii
-  - 1, ], dim = c(n, n)), G = G, jump = beta_jump, B = beta_niter,
-  beta_a = beta_a, beta_b = beta_b): unused argument (B = beta_niter)
 runGibbs: possible error in paramDraw(z = Z[ii - 1, ], lambda =
   lambda_draw, tau0 = tau0[ii - 1], tau1 = tau1[ii - 1], sigma0_sq =
   sigma0_sq[ii - 1], sigma1_sq = sigma1_sq[ii - 1], mu0 = tau_mu,
   sigma_df = sigma_df, omega_sq = omega_sq): unused arguments (z = Z[ii
   - 1, ], mu0 = tau_mu)
-runGibbs: no visible global function definition for ‘swendson.wang’
 runSW: no visible global function definition for ‘llply’
 sampleCluster: no visible global function definition for
   ‘h_z.param.log’
@@ -200,11 +196,10 @@ Undefined global functions or variables:
   element_line element_rect element_text expectedMSCounts facet_grid
   foreach geom_contour geom_line geom_raster geom_tile ggplot ggsave
   ggtitle graph_from_data_frame grid.arrange guide_colourbar guides h
-  h_z.param.log i iteration labeller labs lambda lira_array llply
-  logPost margin melt omega.sq param rchisq read.table registerDoMC rel
-  rgamma rnorm row_id runif scale_fill_gradientn scale_x_reverse
-  sigma.df sigma0.sq sigma1.sq swendson.wang theme timestamp unit vars
-  w write.table xlab ylab z z.cluster
+  h_z.param.log i iteration labeller labs lambda llply logPost margin
+  melt param rchisq read.table registerDoMC rel rgamma rnorm row_id
+  runif scale_fill_gradientn scale_x_reverse sigma0.sq sigma1.sq theme
+  timestamp unit vars w write.table xlab ylab z z.cluster
 Consider adding
   importFrom("stats", "dgamma", "rchisq", "rgamma", "rnorm", "runif")
   importFrom("utils", "read.table", "timestamp", "write.table")

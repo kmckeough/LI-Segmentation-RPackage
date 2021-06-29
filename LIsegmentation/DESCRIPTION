@@ -26,4 +26,5 @@ Imports:
 	igraph,
 	coda,
 	gmp,
-	MASS
+	MASS,
+	grid

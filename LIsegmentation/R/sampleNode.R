@@ -21,7 +21,7 @@ sampleNode<-function(z_node,
   #output samples a new spin for an individual node
   #NOTE: the lambda value needs to by in the 4th position
 
-  R.log<-h_z.param.log(-1, z_node[4],tau0,tau1,sigma0.sq,sigma1.sq) - h_z.param.log(1, z_node[4],tau0,tau1,sigma0_sq,sigma1_sq)
+  R.log<-hzParam(-1, z_node[4],tau0,tau1,sigma0_sq,sigma1_sq) - hzParam(1, z_node[4],tau0,tau1,sigma0_sq,sigma1_sq)
   R<-exp(R.log)
   p_plus<-exp(-log(1+R))
   new.spin<-sample(c(-1,1),1,prob=c(1-p_plus,p_plus))

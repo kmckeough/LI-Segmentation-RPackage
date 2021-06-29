@@ -1,0 +1,168 @@
+---
+title: "Run LIRA-Ising Example"
+author: "Katy McKeough"
+date: "6/2/2021"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+foos<-list.files('~/Documents/gitHub/LI-Segmentation-Rpackage/LIsegmentation/R/')
+sapply(foos,function(x){
+  source(paste('~/Documents/gitHub/LI-Segmentation-Rpackage/LIsegmentation/R/',x,sep=''))
+})
+
+library(FITSio)
+library(ggplot2)
+library(reshape2)
+library(RColorBrewer)
+library(lira)
+library(gridExtra)
+library(doMC)
+library(igraph)
+library(plyr)
+```
+
+## Introduction
+
+In this tutorial we will show you how to run the entire minimal boundary process as detailed in the paper. The first step is to use Low-counts Image Reconstruction and Analysis (LIRA) to estimate the expected multiscale counts in each pixel of our image. Next we separate the image into two partitions: the region of interest (ROI) for which we would like to define the minimal boundary around and the background. To so so we run the Ising Gibbs Sampler which allows us to assign probabilities to each pixel of boing in the (ROI) while favoring similar assignments of adjacent pixels through the using the Ising distribution a priori. Finally we use these estimated probabilities to estimate the minimal boundary. We do this via maximizing the posterior (MAP) in two ways. The first is an ad hoc approach where we find the maximum in a subet of predetermined pixel assignments. The second is taking advantage of Genetic Algorithms (GA) to find the global maximum in a larger space. Details of this procedure can be found in the McKeough et al. (TBD) paper currently hosted on [Overleaf](https://www.overleaf.com/read/kxtkqyxpzqpp).
+
+
+## Procedure
+The example we will use is a 2D Gaussian image from the paper with a background of an average of 0.1 and a size of $\sqrt{8} \sigma$ (bii in Figures 2 and 3). The simulated image that is meant to mimic an observed x-ray image is shown here.
+
+```{r fig.width=3,fig.height=3}
+img<-readFITS('countimg_B1040101.fits')$im
+
+plotSource(img,
+           bound=NA,
+           save=FALSE,
+           legend_label='Counts',
+           colors =  c('black',brewer.pal(5,'YlOrRd')[5:1]),
+           bkg_color='black',
+           legend_color='white',
+           title='')
+
+```
+
+### LIRA
+
+The source code and instructions for LIRA can be found on GitHub at [https://github.com/astrostat/LIRA](https://github.com/astrostat/LIRA). Once you successfully install the package use the following code to create and format the LIRA output. It is recommended you run LIRA for at least 10,000 iterations if possible. For the sake of simplicity we will keep the final 1000 iterations for the next analyses. Be sure to set \texttt{fit.bkg.scale} to TRUE. 
+
+The function \texttt{liraPost()} will reformat the LIRA output to a table with a draw in each row. If \texttt{plot} is set to TRUE it will also produce a trace plot of the log posterior, expected multiscale counts, and the background scale for a quick check for convergence. 
+
+```{r, eval=FALSE}
+
+maxIter <- 10000
+alpha.init=c(3,4,5,6,7,8,9)
+
+psf <- readFITS('psf_33x33.fits')
+psfmat <- matrix(data=psf$imDat,nrow=psf$axDat$len[1],ncol=psf$axDat$len[2])
+
+obs <- readFITS('countimg_B1040101.fits')
+obsmat <- matrix(data=obs$imDat,nrow=obs$axDat$len[1],ncol=obs$axDat$len[2])
+
+bkgdmat<-matrix(0.1,nrow(obsmat),ncol(obsmat))
+strtmat<-matrix(1,nrow(obsmat),ncol(obsmat))
+mapmat<-matrix(1,nrow(obsmat),ncol(obsmat))
+
+
+outsave<-'B1040100.out'
+paramsave<-'B1040100.param'
+
+
+img<-lira(obs.matrix=obsmat, 
+            start.matrix=strtmat,
+            map.matrix=mapmat, 
+            bkg.matrix=bkgdmat, 
+            psf.matrix=psfmat, 
+            out.file=outsave, 
+            fit.bkg.scale=T,
+            thin=1,
+            burn=0, 
+            param.file=paramsave,
+            max.iter=maxIter, 
+            alpha.init=alpha.init)
+  
+  
+
+```
+
+```{r fig.width=6,fig.height=3}
+iterlira<-liraPost(outsave,
+                   paramsave,
+                   burn=8999,
+                   save_file = 'B1040101')
+```
+
+```{r, fig.height=3,fig.width=3}
+avglira<-array(apply(sqrt(iterlira),2,mean),dim=c(64,64))
+plotSource(avglira,
+           bound=NA,
+           save=FALSE,
+           legend_label='sqrt Counts',
+           colors = modifyColor(brewer.pal(9,'YlGnBu')[9:1],
+                                bkg_color='black',n=3),
+           bkg_color='black',
+           legend_color='white',
+           title='')
+```
+
+### Ising Gibbs Sampler
+
+Using the LIRA output we now create a posterior distribution of pixel assignments. For each draw from LIRA we will produce a corresponding array where each pixel is assigned to the ROI (+1) or the background (-1). The key to this step is assuming the Ising distribution a priori to encourage adjacent pixels to have the same pixel assignment. Since we are getting a single draw per LIRA iteration, much of this can run in parallel. Be sure to set the number of cores (\texttt{ncores}) greater to 1 to minimize run time.
+
+```{r, eval=FALSE}
+
+# Load Partition function
+load('../LIsegmentation/data/beale64.Rdata')
+G<-beale64
+
+isingz<-isingGibbs(iterlira,
+                   G,
+                   init_iter = 500,
+                   burn_iter = 50,
+                   beta_jump = 0.01,
+                   beta_a = 100,
+                   beta_b = 1,
+                   beta_start = 0.1,
+                   beta_niter = 50,
+                   tau_mu = 5,
+                   sigma_df = 10,
+                   omega_sq = 1,
+                   init_seed = NA,
+                   ncores = 4)
+
+save(isingz,file='B1040100_ising.Rdata')
+
+```
+
+```{r}
+ising_bin<-isingz$ising_array
+ising_bin[ising_bin<0]<-0
+ising_img<-array(apply(ising_bin,2,mean),dim=c(32,32))
+
+plotSource(ising_img,
+           bound=NA,
+           save=FALSE,
+           legend_label='P(ROI)',
+           colors = c('black',brewer.pal(9,'Greys')[9:1]),
+           title='',
+           limits = c(min(ising_img),1))
+```
+
+### Ad Hoc MAP
+
+First we will show how to apply the Ad Hoc MAP to obtain the minimal boundary
+
+```{r}
+
+bound<-getBound(Ziter = isingz$ising_array,
+                lambda = iterlira,
+                param = isingz$param
+                )
+```
+
+### GA MAP

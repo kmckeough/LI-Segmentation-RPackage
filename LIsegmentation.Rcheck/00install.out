@@ -2,8 +2,7 @@
 ** using staged installation
 ** R
 ** byte-compile and prepare package for lazy loading
-Note: possible error in 'runGibbs(lira_array[i, ': unused arguments (tau1.start = tau1, tau0.start = tau0, sigma1_sq.start = sigma1_sq, sigma0_sq.start = sigma0_sq) 
-Note: possible error in 'tempMH(beta = beta[ii - ': unused argument (B = beta_niter) 
+Note: possible error in 'runGibbs(lambda[i, ], ': unused arguments (tau1.start = tau1, tau0.start = tau0, sigma1_sq.start = sigma1_sq, sigma0_sq.start = sigma0_sq) 
 Note: possible error in 'paramDraw(z = Z[ii - ': unused arguments (z = Z[ii - 1, ], mu0 = tau_mu) 
 ** help
 *** installing help indices

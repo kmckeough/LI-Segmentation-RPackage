@@ -55,7 +55,7 @@ runGibbs<-function(lambda_draw,
   #Initialize parameter vectors
   if(!is.na(init_seed)){set.seed(init_seed)}
 
-  beta<-rep(beta.start,iter)
+  beta<-rep(beta_start,iter)
   if(is.na(sigma1_sq_start)){
     sigma1_sq<-rep(sigma_df*omega_sq/rchisq(1,sigma_df),iter)
   }else{
@@ -97,12 +97,12 @@ runGibbs<-function(lambda_draw,
 
     # Draw for mean and sd parameters
     param <- paramDraw(z = Z[ii-1,],
-                       lambda = lambda_draw,
+                       lambda_draw = lambda_draw,
                         tau0 = tau0[ii-1],
                        tau1 = tau1[ii-1],
                         sigma0_sq = sigma0_sq[ii-1],
                        sigma1_sq = sigma1_sq[ii-1],
-                        mu0 = tau_mu,
+                       tau_mu = tau_mu,
                        sigma_df = sigma_df,
                        omega_sq = omega_sq)
 

@@ -11,7 +11,9 @@
 #' @return A matrix of neighborhood values
 #' @export
 #'
-getBound<-function(Ziter,lambda,param){
+getBound<-function(Ziter,
+                   lambda,
+                   param){
 
 
   n<-sqrt(ncol(Ziter))
@@ -35,7 +37,9 @@ getBound<-function(Ziter,lambda,param){
 
   Zset<-rbind(Ziter,Znbhd)
 
-  Zmax<-adhocBound(Zset,lambda,param)
+  Zmax<-adhocBound(Zset,
+                   lambda,
+                   param)
 
   return(Zmax)
 }

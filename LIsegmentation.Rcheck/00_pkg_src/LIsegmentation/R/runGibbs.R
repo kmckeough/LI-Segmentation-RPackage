@@ -57,12 +57,12 @@ runGibbs<-function(lambda_draw,
 
   beta<-rep(beta.start,iter)
   if(is.na(sigma1_sq_start)){
-    sigma1_sq<-rep(sigma.df*omega.sq/rchisq(1,sigma.df),iter)
+    sigma1_sq<-rep(sigma_df*omega_sq/rchisq(1,sigma_df),iter)
   }else{
     sigma1_sq<-rep(sigma1_sq_start,iter)
   }
   if(is.na(sigma0_sq_start)){
-    sigma0_sq<-rep(sigma.df*omega.sq/rchisq(1,sigma.df),iter)
+    sigma0_sq<-rep(sigma_df*omega_sq/rchisq(1,sigma_df),iter)
   }else{
     sigma0_sq<-rep(sigma0_sq_start,iter)
   }
@@ -89,7 +89,7 @@ runGibbs<-function(lambda_draw,
                       z = array(Z[ii-1,],dim = c(n,n)),
                       G = G,
                       jump = beta_jump,
-                      B = beta_niter,
+                      iter = beta_niter,
                       beta_a = beta_a,
                       beta_b = beta_b)
 
@@ -112,7 +112,7 @@ runGibbs<-function(lambda_draw,
     sigma1_sq[ii] <- param$sigma1_sq
 
     # Draw from SW
-    z.img<-swendson.wang(lambda = lambda_draw,
+    z.img<-runSW(lambda = lambda_draw,
                          z_0 = array(Z[ii-1,],dim=c(n,n)),
                          tau0 = tau0[ii],
                          tau1 = tau1[ii],

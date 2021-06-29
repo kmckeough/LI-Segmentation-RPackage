@@ -58,10 +58,27 @@ runSW<-function(lambda_draw,
     z.cluster_disconnected<-c()
   }
 
+  # all pixel assignments are the same randomly change a disconnected pixel (this fix is often not relevant but will need some)
+  # if((all(z.cluster_disconnected$cluster==-1) & all(z.cluster_connected$cluster==-1)) |
+  #    (all(z.cluster_disconnected$cluster==1) & all(z.cluster_connected$cluster==1))){
+  #
+  #   if(sum(z.cluster$cluster==0)>0){
+  #     z.cluster_disconnected$z[sample(1:nrow(z.cluster_disconnected),1)]<-z.cluster_disconnected$z[sample(1:nrow(z.cluster_disconnected),1)]*-1
+  #   }else{
+  #     #TBD
+  #   }
+  #
+  # }
+
   #transform back into image:
   z.newspin<-rbind(z.cluster_connected,z.cluster_disconnected)
   z.newspin<-z.newspin[order(z.newspin$node),]$z
+  if(length(unique(z.newspin))==1){
+    index<-sample(1:length(z.newspin),1)
+    z.newspin[index]<-z.newspin[index]*-1
+    }
   z.new<-array(z.newspin,dim=c(n.z,n.z))
+
 
   return(z.new)
 
