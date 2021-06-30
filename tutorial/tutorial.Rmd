@@ -9,9 +9,13 @@ urlcolor: blue
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-foos<-list.files('~/Documents/gitHub/LI-Segmentation-Rpackage/LIsegmentation/R/')
+tutorial_path<- '~/Documents/gitHub/LI-Segmentation-Rpackage/tutorial/'
+package_path<-  '~/Documents/gitHub/LI-Segmentation-Rpackage/LIsegmentation/R/'
+
+setwd(tutorial_path)
+foos<-list.files(package_path)
 sapply(foos,function(x){
-  source(paste('~/Documents/gitHub/LI-Segmentation-Rpackage/LIsegmentation/R/',x,sep=''))
+  source(paste(package_path,x,sep=''))
 })
 
 library(FITSio)
@@ -23,6 +27,8 @@ library(gridExtra)
 library(doMC)
 library(igraph)
 library(plyr)
+library(gmp)
+
 ```
 
 ## Introduction
@@ -51,7 +57,7 @@ plotSource(img,
 
 The source code and instructions for LIRA can be found on GitHub at [https://github.com/astrostat/LIRA](https://github.com/astrostat/LIRA). Once you successfully install the package use the following code to create and format the LIRA output. It is recommended you run LIRA for at least 10,000 iterations if possible. For the sake of simplicity we will keep the final 1000 iterations for the next analyses. Be sure to set \texttt{fit.bkg.scale} to TRUE. 
 
-The function \texttt{liraPost()} will reformat the LIRA output to a table with a draw in each row. If \texttt{plot} is set to TRUE it will also produce a trace plot of the log posterior, expected multiscale counts, and the background scale for a quick check for convergence. 
+ 
 
 ```{r, eval=FALSE}
 
@@ -69,8 +75,8 @@ strtmat<-matrix(1,nrow(obsmat),ncol(obsmat))
 mapmat<-matrix(1,nrow(obsmat),ncol(obsmat))
 
 
-outsave<-'B1040100.out'
-paramsave<-'B1040100.param'
+outsave<-'B1040101.out'
+paramsave<-'B1040101.param'
 
 
 img<-lira(obs.matrix=obsmat, 
@@ -90,14 +96,18 @@ img<-lira(obs.matrix=obsmat,
 
 ```
 
-```{r fig.width=6,fig.height=3}
+The function \texttt{liraPost()} will reformat the LIRA output to a table with a draw in each row. If \texttt{plot} is set to TRUE it will also produce a trace plot of the log posterior, expected multiscale counts, and the background scale for a quick check for convergence.
+
+```{r fig.width=6,fig.height=3, eval=FALSE}
 iterlira<-liraPost(outsave,
                    paramsave,
                    burn=8999,
                    save_file = 'B1040101')
 ```
 
+Here is an example of how to plot an image using the \texttt{plotSource} function. The image shows the average sqrt of the multiscale counts taken across 1000 iterations of LIRA.
 ```{r, fig.height=3,fig.width=3}
+iterlira<-read.table('B1040101_lira_iters.txt')
 avglira<-array(apply(sqrt(iterlira),2,mean),dim=c(64,64))
 plotSource(avglira,
            bound=NA,
@@ -112,7 +122,7 @@ plotSource(avglira,
 
 ### Ising Gibbs Sampler
 
-Using the LIRA output we now create a posterior distribution of pixel assignments. For each draw from LIRA we will produce a corresponding array where each pixel is assigned to the ROI (+1) or the background (-1). The key to this step is assuming the Ising distribution a priori to encourage adjacent pixels to have the same pixel assignment. Since we are getting a single draw per LIRA iteration, much of this can run in parallel. Be sure to set the number of cores (\texttt{ncores}) greater to 1 to minimize run time.
+Using the LIRA output we now need to obtain draws from the posterior distribution of pixel assignments. For each draw from LIRA we will produce a corresponding array where each pixel is assigned to the ROI (+1) or the background (-1). The key to this step is assuming the Ising distribution a priori to encourage adjacent pixels to have the same pixel assignment. Since we are getting a single draw per LIRA iteration, much of this can run in parallel. Be sure to set the number of cores (\texttt{ncores}) greater to 1 to minimize run time. The output of the \texttt{isingGibbs} function includes the draws from the posterior for both the pixel assignments and corresponding parameters and hyperparameters. 
 
 ```{r, eval=FALSE}
 
@@ -135,14 +145,16 @@ isingz<-isingGibbs(iterlira,
                    init_seed = NA,
                    ncores = 4)
 
-save(isingz,file='B1040100_ising.Rdata')
+save(isingz,file='B1040101_ising.Rdata')
 
 ```
 
-```{r}
+The image here shows the proportion of times each pixel is assigned to the ROI (+1) across the 1000 iterations. The lighter areas of the image are more likely to be contained within the final minimal boundary. 
+```{r, echo=FALSE}
+load('B1040101_ising.Rdata')
 ising_bin<-isingz$ising_array
 ising_bin[ising_bin<0]<-0
-ising_img<-array(apply(ising_bin,2,mean),dim=c(32,32))
+ising_img<-array(apply(ising_bin,2,mean),dim=c(64,64))
 
 plotSource(ising_img,
            bound=NA,
@@ -155,14 +167,75 @@ plotSource(ising_img,
 
 ### Ad Hoc MAP
 
-First we will show how to apply the Ad Hoc MAP to obtain the minimal boundary
+In the Ad Hoc MAP we find the global MAP in a pre-determined set of pixel assignments. The set of pixel assignmets are the draws we obtained in the ising gibbs sampling step, as well as a set of closest guesses. The closest guesses are derived using the neighbourhood statistic. The neighbourhood statistic is a pixel-wise metric that is correlated with how likely a pixel contains the ROI. The paper contains details as to how this statistic is calculated and used to create the sereis of close guesses. The global MAP will be our final estimate of the minimal boundary, thus signifying our best guess of the boundary of the source. 
 
-```{r}
+```{r, eval =FALSE}
 
 bound<-getBound(Ziter = isingz$ising_array,
                 lambda = iterlira,
-                param = isingz$param
-                )
+                param = as.data.frame(isingz$param))
+
+save(bound, file='B1040101_bound.Rdata')
+```
+
+```{r}
+load('B1040101_bound.Rdata')
+plotSource(img,
+           bound=bound$Zmax,
+           save=FALSE,
+           legend_label='Counts',
+           colors =  c('black',brewer.pal(5,'YlOrRd')[5:1]),
+           bkg_color='black',
+           legend_color='white',
+           title='')
 ```
 
 ### GA MAP
+
+
+ To obtain our final boundary estimate, we optimize over the distribution of pixel assignments given the observation $Y$ using a maximum a posteriror (MAP) estimation,
+\begin{eqnarray}
+P(Z|Y) &=& \int P(Z,\vec  \theta, \Lambda | Y) d\vec \theta d \Lambda  \\
+&=& \int P(Z | \vec \theta , \Lambda) P(\vec \theta |\Lambda, Y)P(\Lambda |Y) d \vec \theta d \Lambda  \\
+&=& \int P(Z | \vec \theta , \Lambda) P(\vec \theta |\Lambda)P(\Lambda |Y) d\vec  \theta d \Lambda  \; ,
+\end{eqnarray}
+where $\vec \theta$ represents the nuisance parameters ($\beta,\sigma_0^2,\sigma_1^2,\tau_0,\tau_1$). We assume $\vec \theta$ is independent of $Y$ when given $\Lambda$.
+
+Ideally, we would approximate this by,
+\begin{eqnarray}
+\hat P(Z|Y) &= & \frac{1}{\Omega} \sum_{k=1}^\Omega P(Z|\vec \theta^{(k)}, \tilde \Lambda^{(k)})  \;,
+\end{eqnarray}
+where $\Omega$ is the total number of iterations from steps 1 and 2. Evaluating this estimate is difficult since we cannot perform operations on the log probability since we are summing across the raw probability terms. The evaluated probabilities are too small, given our computational limits due to the overwhelming possible of pixel assignment arrangements. However, we are not necessarily concerned with the value of $\hat P(Z|Y)$, but rather we would like to find which $Z$ gives us the maximum. That is, we just need to show that  $\hat P(Z_1|Y) > \hat P(Z_2 |Y)$, or equivalently, 
+\begin{equation}
+    \frac{\hat P(Z_1|Y)}{\hat P(Z_2|Y)} >1 \;,
+\end{equation} 
+to claim that $Z_1$ brings us closer to the global maximum. 
+
+We can proceed with this technique by first writing the ratio in terms of values we can solve without computational issues,
+\begin{eqnarray}
+\frac{\hat P(Z_1|Y)}{\hat P(Z_2|Y)} &=& \frac{\sum_{k=1}^\Omega \exp(\log P_k(Z_1| \vec \theta^{(k)}, \tilde \lambda^{(k)}))}{\sum_{k=1}^\Omega \exp(\log P_k(Z_2 | \vec \theta^{(k)}, \tilde \lambda^{(k)}))} \nonumber \\
+&=&\frac{\sum_{k=1}^\Omega \exp(\log P_k(Z_1| \vec \theta^{(k)}, \tilde \lambda^{(k)})-l_{\mbox{max}})}{\sum_{k=1}^\Omega \exp(\log P_k(Z_2 | \vec \theta^{(k)}, \tilde \lambda^{(k)})-l_{\mbox{max}})} \;.
+\end{eqnarray}
+
+where $l_{\mbox{max}} = \mbox{max}_k[\log P_k (Z_2| \tilde \lambda^{(k)}, \vec \theta^{(k)})]$ is the maximum log-likelihood of denominator term. Given a set of pixel assignments $Z$ we can find the global maximum by comparing the probability of each new $P(Z_k|Y)$ in a ratio with the current maximum. Using this method we can find the global maximum using any set of pixel assignments even if we do not expect the corresponding probabilities to be monotonically increasing. 
+
+
+The functions for this method are mostly complete but are not completely de-bugged and need to be tuned for better optimization. These functions include:
+
+* 
+
+*
+
+*
+
+## Contents
+
+Here is a list of the content in the *tutorial* directory 
+
+* tutorial.pdf/tutorial.Rmd - tutorial text and code
+* countimg_B1040101.fits - example image
+* psf_33x33.fits - example psf
+* B1040101_lira_iters.txt - post-processed LIRA output: each row is 1 iteration, each column is a pixel
+* B1040100_ising.Rdata - ising gibbs sampler output
+* B1040100_bound.Rdata - minimal boundary estimate
+

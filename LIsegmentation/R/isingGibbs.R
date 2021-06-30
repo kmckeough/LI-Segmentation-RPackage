@@ -103,6 +103,6 @@ isingGibbs<-function(lambda,
   colnames(param)<-c('tau1','tau0','sigma0_sq','sigma1_sq','beta')
   z_array<-ising_array[,-c(1:5)]
 
-  return(list(param = param,ising_array = z_array))
+  return(list(param = as.data.frame(param),ising_array = z_array))
 
 }
